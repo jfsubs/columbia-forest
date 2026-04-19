@@ -680,7 +680,7 @@ function BoundaryMap({ compact = false }) {
         className="w-full h-auto block"
         style={{
           border: `1px solid ${COLORS.line}`,
-          maxWidth: compact ? "320px" : "420px",
+          maxWidth: compact ? "420px" : "600px",
         }}
       />
       <div
