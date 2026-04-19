@@ -657,15 +657,15 @@ function Hero({ setPage }) {
 }
 
 function BoundaryMap({ compact = false }) {
-  // Stylized representation of Columbia Forest boundaries.
-  // North: Columbia Pike. East: Four Mile Run. South: S. George Mason Drive.
+  // Map image of Columbia Forest and its immediate neighbors, cropped from
+  // the Arlington County GIS viewer. Attribution rendered below.
   return (
     <div
       className="relative"
       style={{
         backgroundColor: COLORS.creamDark,
         border: `1px solid ${COLORS.line}`,
-        padding: compact ? "1.5rem" : "2.5rem",
+        padding: compact ? "1.25rem" : "1.75rem",
       }}
     >
       <div
@@ -674,83 +674,30 @@ function BoundaryMap({ compact = false }) {
       >
         NEIGHBORHOOD BOUNDARIES
       </div>
-      <svg
-        viewBox="0 0 280 220"
-        className="w-full h-auto"
-        style={{ maxWidth: compact ? "220px" : "340px" }}
-      >
-        {/* neighborhood shape: quadrilateral bounded by Columbia Pike (N), Four Mile Run (E), S. George Mason Dr (S), Arlington County line (W) — per CFCA Bylaws, Article II */}
-        <polygon
-          points="55,55 245,50 230,180 60,175"
-          fill={COLORS.cream}
-          stroke={COLORS.forest}
-          strokeWidth="1.5"
-        />
-        {/* Bailey's Branch Park dot */}
-        <circle cx="150" cy="115" r="4" fill={COLORS.terracotta} />
-        <text
-          x="160"
-          y="119"
-          fontSize="9"
-          fill={COLORS.ink}
-          fontFamily="Newsreader, serif"
-          fontStyle="italic"
-        >
-          Bailey's Branch
-        </text>
-        {/* boundary labels */}
-        <text
-          x="150"
-          y="40"
-          textAnchor="middle"
-          fontSize="9"
-          fill={COLORS.forestDark}
-          fontFamily="Newsreader, serif"
-          letterSpacing="1.5"
-        >
-          COLUMBIA PIKE
-        </text>
-        <text
-          x="265"
-          y="115"
-          textAnchor="middle"
-          fontSize="9"
-          fill={COLORS.forestDark}
-          fontFamily="Newsreader, serif"
-          letterSpacing="1.5"
-          transform="rotate(90 265,115)"
-        >
-          FOUR MILE RUN
-        </text>
-        <text
-          x="145"
-          y="200"
-          textAnchor="middle"
-          fontSize="9"
-          fill={COLORS.forestDark}
-          fontFamily="Newsreader, serif"
-          letterSpacing="1.5"
-        >
-          S. GEORGE MASON DR
-        </text>
-        <text
-          x="28"
-          y="115"
-          textAnchor="middle"
-          fontSize="9"
-          fill={COLORS.forestDark}
-          fontFamily="Newsreader, serif"
-          letterSpacing="1.5"
-          transform="rotate(-90 28,115)"
-        >
-          ARLINGTON COUNTY LINE
-        </text>
-      </svg>
+      <img
+        src="/columbia-forest-map.png"
+        alt="Map of Columbia Forest and surrounding Arlington neighborhoods, with Columbia Forest shaded at center"
+        className="w-full h-auto block"
+        style={{
+          border: `1px solid ${COLORS.line}`,
+          maxWidth: compact ? "320px" : "420px",
+        }}
+      />
       <div
         className="text-xs mt-3 italic"
         style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
       >
-        Not to scale — illustrative.
+        Map:{" "}
+        <a
+          href="https://experience.arcgis.com/experience/a9990f1fe2924fefac18b6f323ee7c87/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:no-underline"
+          style={{ color: COLORS.forest }}
+        >
+          Arlington County GIS
+        </a>
+        .
       </div>
     </div>
   );
