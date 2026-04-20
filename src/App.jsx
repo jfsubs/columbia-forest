@@ -37,7 +37,9 @@ const SITE = {
     west: "the Arlington County line",
   },
   stats: {
-    population: "~4,000",
+    population: "~4,600",
+    populationSource: "2000 Census",
+    residences: "~1,790",
     area: "0.22 sq. mi.",
     buildings: 238,
     listedNRHP: 2004,
@@ -132,15 +134,34 @@ const PROJECTS = [
 ];
 
 const DOCUMENTS = [
-  { title: "CFCA Bylaws", type: "PDF", url: "/cfca-bylaws.pdf", updated: "March 2000" },
+  {
+    title: "CFCA Bylaws & Constitution",
+    description: "The governing document of the association, including all amendments through March 2000.",
+    type: "PDF",
+    url: "/cfca-bylaws.pdf",
+    updated: "March 2000",
+  },
   {
     title: "Neighborhood Conservation Plan",
+    description:
+      "A comprehensive 60-page plan adopted by the Arlington County Board in 2000, covering history, land use, traffic, parks, and beautification. Historical document — many recommendations have since been implemented or superseded.",
     type: "PDF",
-    url: SITE.conservationPlanUrl,
-    updated: "2004",
+    url: "/cfca-nc-plan-2000.pdf",
+    attribution: "Arlington County",
+    updated: "November 2000",
   },
-  { title: "Annual Meeting Minutes (most recent)", type: "PDF", url: "#", updated: "TBD" },
-  { title: "Membership Form", type: "PDF", url: "#", updated: "TBD" },
+  {
+    title: "Annual Meeting Minutes (most recent)",
+    type: "PDF",
+    url: "#",
+    updated: "TBD",
+  },
+  {
+    title: "Membership Form",
+    type: "PDF",
+    url: "#",
+    updated: "TBD",
+  },
 ];
 
 // ============================================================
@@ -1106,7 +1127,7 @@ function HomePage({ setPage }) {
 
 // --- About page -----------------------------------------------------------
 
-function AboutPage() {
+function AboutPage({ setPage }) {
   return (
     <>
       <PageHeader
@@ -1214,13 +1235,29 @@ function AboutPage() {
               style={{ fontFamily: "Newsreader, serif", color: COLORS.ink }}
             >
               <p className="text-lg leading-relaxed mb-5">
-                Columbia Forest was built during the Second World War to house the
-                families of young military officers and ranking officials stationed
-                in the capital region. Between 1942 and 1945, the U.S. Army Corps of
-                Engineers and the Defense Housing Corporation erected{" "}
+                The land under Columbia Forest has passed through a remarkable
+                succession of owners. Originally part of a 6,000-acre grant to sea
+                captain Robert Howson in 1669, it was sold to John Alexander — the
+                family for whom the City of Alexandria is named — and eventually
+                acquired by{" "}
+                <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                  George Washington
+                </span>{" "}
+                in 1774. At his death the land passed to his relative George Custis,
+                whose Arlington Plantation gave the county its present name.
+              </p>
+              <p className="text-lg leading-relaxed mb-5">
+                For a long time afterward, this was rural farmland. That changed
+                quickly in 1941. With the opening of the Pentagon and the U.S.
+                entry into the Second World War, Washington needed housing for
+                young military officers and ranking officials — fast, and close to
+                bus transit. The Defense Housing Corporation stepped in. Between
+                1942 and 1945, the U.S. Army Corps of Engineers erected{" "}
                 {SITE.stats.buildings} paired brick and concrete-block dwellings in
-                the Colonial Revival style across forty-eight acres at the western
-                edge of Arlington.
+                the Colonial Revival style across forty-eight acres here, part of
+                only 40,000 housing units built nationwide during the war. The
+                street layout conformed to the topography, space was allocated for
+                parks, and care was taken to save existing trees.
               </p>
               <p className="text-lg leading-relaxed mb-5">
                 The Civic Association itself{" "}
@@ -1228,17 +1265,32 @@ function AboutPage() {
                   predates the houses.
                 </span>{" "}
                 CFCA was organized in {SITE.established} — a year before the first
-                shovel hit the ground — and has operated continuously ever since.
+                shovel hit the ground. For decades, two separate associations
+                operated side by side: one for the original Columbia Forest
+                development, and one for the adjacent Virginia Heights subdivision
+                added in 1947. The two were eventually merged to form today's
+                Columbia Forest Civic Association.
+              </p>
+              <p className="text-lg leading-relaxed mb-5">
+                The quiet character of the interior neighborhood held up remarkably
+                well until 1974, when a new bridge across Four Mile Run connected
+                our stretch of South George Mason Drive to the rest of Arlington
+                and, via Fairfax County, to Route 7. Overnight the neighborhood
+                became a cut-through: traffic on interior streets jumped from a
+                trickle to over 5,000 vehicles a day. Traffic calming and
+                pedestrian safety have been central to the Association's work ever
+                since.
               </p>
               <p className="text-lg leading-relaxed">
-                In {SITE.stats.listedNRHP}, Columbia Forest was listed on the{" "}
+                In {SITE.stats.listedNRHP}, Columbia Forest was listed on the
                 National Register of Historic Places as the{" "}
                 <span style={{ fontStyle: "italic", color: COLORS.forest }}>
                   Columbia Forest Historic District
                 </span>
                 . Today the neighborhood is home to a mix of single-family homes,
-                duplexes, townhouses, apartments, and condominiums — roughly four
-                thousand residents packed into a tightly-knit 0.22 square miles.
+                duplexes, townhouses, apartments, and condominiums — roughly
+                forty-six hundred residents packed into a tightly-knit 0.22 square
+                miles.
               </p>
             </div>
             <aside className="md:col-span-5">
@@ -1289,6 +1341,200 @@ function AboutPage() {
                 </dl>
               </div>
             </aside>
+          </div>
+        </div>
+
+        {/* Landmarks */}
+        <div className="py-12 border-t" style={{ borderColor: COLORS.line }}>
+          <SectionHeading
+            eyebrow="LANDMARKS"
+            title="Small places worth noticing."
+          />
+          <p
+            className="text-lg leading-relaxed max-w-3xl mb-10"
+            style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+          >
+            A short walk around Columbia Forest turns up a surprising amount of
+            history — some of it older than Arlington itself.
+          </p>
+          <div className="grid md:grid-cols-3 gap-10">
+            <div>
+              <div
+                className="text-[10px] tracking-[0.3em] mb-3"
+                style={{
+                  color: COLORS.terracotta,
+                  fontFamily: "Newsreader, serif",
+                }}
+              >
+                1791 · S. JEFFERSON ST
+              </div>
+              <h3
+                className="text-2xl mb-3"
+                style={{
+                  fontFamily: "Fraunces, serif",
+                  fontWeight: 400,
+                  color: COLORS.forestDark,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                SW Number 6 Boundary Stone
+              </h3>
+              <p
+                className="leading-relaxed"
+                style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+              >
+                One of the original stones placed in 1791 to mark the boundaries of
+                the District of Columbia. It sits in the median strip of South
+                Jefferson Street, enclosed in a small wrought-iron fence dedicated
+                by the Daughters of the American Revolution. Older than the
+                neighborhood, older than Arlington County itself.
+              </p>
+            </div>
+            <div>
+              <div
+                className="text-[10px] tracking-[0.3em] mb-3"
+                style={{
+                  color: COLORS.terracotta,
+                  fontFamily: "Newsreader, serif",
+                }}
+              >
+                1948 · THROUGHOUT
+              </div>
+              <h3
+                className="text-2xl mb-3"
+                style={{
+                  fontFamily: "Fraunces, serif",
+                  fontWeight: 400,
+                  color: COLORS.forestDark,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Five Lustron Houses
+              </h3>
+              <p
+                className="leading-relaxed"
+                style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+              >
+                Columbia Forest is home to five Lustron houses — prefabricated
+                porcelain-enameled steel homes shipped flat and bolted together on
+                site as a post-war housing experiment. Fewer than 3,000 were ever
+                built nationwide; Lustrons in other parts of the country are listed
+                on the National Register.
+              </p>
+            </div>
+            <div>
+              <div
+                className="text-[10px] tracking-[0.3em] mb-3"
+                style={{
+                  color: COLORS.terracotta,
+                  fontFamily: "Newsreader, serif",
+                }}
+              >
+                1997 · S. 10TH ST
+              </div>
+              <h3
+                className="text-2xl mb-3"
+                style={{
+                  fontFamily: "Fraunces, serif",
+                  fontWeight: 400,
+                  color: COLORS.forestDark,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Bailey's Branch Park
+              </h3>
+              <p
+                className="leading-relaxed"
+                style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+              >
+                An acre-and-a-half park tucked between South Columbus and South
+                Frederick Streets, built above a portion of the Bailey's Branch
+                stream. The tot lot arrived in 1997 and playground equipment,
+                landscaping, and benches followed in 1999 — and it has been the
+                heart of the neighborhood's outdoor life ever since.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Neighborhood Goals (from 2000 NC Plan) */}
+        <div className="py-12 border-t" style={{ borderColor: COLORS.line }}>
+          <SectionHeading
+            eyebrow="NEIGHBORHOOD GOALS"
+            title="What we work toward."
+          />
+          <div className="grid md:grid-cols-12 gap-10">
+            <div className="md:col-span-5">
+              <p
+                className="text-lg leading-relaxed mb-5"
+                style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+              >
+                Columbia Forest adopted seven neighborhood goals as part of its{" "}
+                <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                  2000 Neighborhood Conservation Plan
+                </span>
+                . They remain a good description of what the Association works
+                toward today.
+              </p>
+              <p
+                className="leading-relaxed"
+                style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+              >
+                The full Conservation Plan — a 60-page document with chapters on
+                history, land use, traffic, parks, and beautification — is
+                available on the{" "}
+                <button
+                  onClick={() => setPage("documents")}
+                  style={{
+                    color: COLORS.forest,
+                    fontStyle: "italic",
+                    textDecoration: "underline",
+                    background: "none",
+                    border: 0,
+                    padding: 0,
+                    cursor: "pointer",
+                    font: "inherit",
+                  }}
+                >
+                  Documents page
+                </button>
+                .
+              </p>
+            </div>
+            <ol
+              className="md:col-span-7 space-y-5"
+              style={{ fontFamily: "Newsreader, serif" }}
+            >
+              {[
+                "Maintain a balanced mix of housing options and foster opportunities for home ownership.",
+                "Ensure pedestrian safety through better sidewalks, street design, and lighting.",
+                "Support variety and safety in transportation — calmer streets, more parking, convenient transit, and safer bicycling.",
+                "Expand access to parks and establish community stewardship of Four Mile Run and Bailey's Branch.",
+                "Improve livability and appearance through beautification, tree preservation, litter control, and code enforcement.",
+                "Build a strong Columbia Forest identity through neighborhood signs and shared spaces.",
+                "Promote community involvement.",
+              ].map((goal, i) => (
+                <li key={i} className="flex gap-4">
+                  <span
+                    className="flex-shrink-0 text-2xl leading-none"
+                    style={{
+                      fontFamily: "Fraunces, serif",
+                      color: COLORS.terracotta,
+                      fontWeight: 400,
+                      minWidth: "1.5rem",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span
+                    className="text-lg leading-relaxed"
+                    style={{ color: COLORS.ink }}
+                  >
+                    {goal}
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
 
@@ -1591,7 +1837,7 @@ function DocumentsPage() {
                 rel={isPlaceholder ? undefined : "noopener noreferrer"}
                 aria-label={ariaLabel}
                 aria-disabled={isPlaceholder ? "true" : undefined}
-                className="flex items-center justify-between py-6 border-b hover:opacity-70 transition-opacity"
+                className="flex items-start justify-between py-6 border-b hover:opacity-70 transition-opacity"
                 style={{
                   borderColor: COLORS.line,
                   opacity: isPlaceholder ? 0.55 : 1,
@@ -1601,13 +1847,14 @@ function DocumentsPage() {
                   if (isPlaceholder) e.preventDefault();
                 }}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-start gap-4 flex-1 min-w-0">
                   <FileText
                     size={18}
                     aria-hidden="true"
+                    className="mt-1 flex-shrink-0"
                     style={{ color: COLORS.terracotta }}
                   />
-                  <div>
+                  <div className="min-w-0">
                     <div
                       className="text-lg"
                       style={{
@@ -1618,18 +1865,33 @@ function DocumentsPage() {
                     >
                       {doc.title}
                     </div>
+                    {doc.description && (
+                      <p
+                        className="text-sm leading-relaxed mt-1"
+                        style={{
+                          color: COLORS.ink,
+                          fontFamily: "Newsreader, serif",
+                        }}
+                      >
+                        {doc.description}
+                      </p>
+                    )}
                     <div
-                      className="text-xs mt-0.5"
+                      className="text-xs mt-1.5"
                       style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
                     >
                       {doc.type} ·{" "}
                       {isPlaceholder ? "Coming soon" : `Updated ${doc.updated}`}
+                      {doc.attribution && !isPlaceholder && (
+                        <> · Courtesy of {doc.attribution}</>
+                      )}
                     </div>
                   </div>
                 </div>
                 <ArrowUpRight
                   size={18}
                   aria-hidden="true"
+                  className="flex-shrink-0 ml-4 mt-1"
                   style={{ color: COLORS.forest }}
                 />
               </a>
@@ -1736,7 +1998,7 @@ export default function App() {
   let content;
   switch (page) {
     case "about":
-      content = <AboutPage />;
+      content = <AboutPage setPage={setPage} />;
       break;
     case "events":
       content = <EventsPage />;
