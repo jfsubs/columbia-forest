@@ -45,9 +45,8 @@ const SITE = {
     listedNRHP: 2004,
   },
   social: {
-    facebook: "https://www.facebook.com/ColumbiaForest",
-    twitter: "https://twitter.com/CFCA_Arlington",
-    nextdoor: "https://columbiaforest.nextdoor.com",
+    // Former Facebook, X/Twitter, and Nextdoor accounts are not currently
+    // maintained by CFCA. Contact goes through the president's email below.
   },
   conservationPlanUrl:
     "http://arlingtonva.s3.amazonaws.com/wp-content/uploads/sites/31/2014/02/NC_ColumbiaForest_Plan.pdf",
@@ -519,51 +518,27 @@ function Footer({ setPage }) {
               </ul>
             </nav>
 
-            <nav aria-label="Connect on social media">
+            <nav aria-label="Connect with CFCA">
               <div
                 className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
                 style={{ fontFamily: "Newsreader, serif" }}
               >
                 CONNECT
               </div>
-              <ul className="space-y-2 text-sm" style={{ fontFamily: "Newsreader, serif" }}>
-                <li>
-                  <a
-                    href={SITE.social.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Columbia Forest on Facebook (opens in a new tab)"
-                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                  >
-                    Facebook
-                    <ExternalLink size={11} aria-hidden="true" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={SITE.social.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Columbia Forest on X, formerly Twitter (opens in a new tab)"
-                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                  >
-                    X (@CFCA_Arlington)
-                    <ExternalLink size={11} aria-hidden="true" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={SITE.social.nextdoor}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Columbia Forest on Nextdoor (opens in a new tab)"
-                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                  >
-                    Nextdoor
-                    <ExternalLink size={11} aria-hidden="true" />
-                  </a>
-                </li>
-              </ul>
+              <p
+                className="text-sm opacity-80 leading-relaxed mb-3"
+                style={{ fontFamily: "Newsreader, serif" }}
+              >
+                The best way to reach CFCA is by email to the president.
+              </p>
+              <a
+                href={`mailto:${SITE.email}`}
+                aria-label={`Email the CFCA President at ${SITE.email}`}
+                className="text-sm opacity-90 hover:opacity-100 transition-opacity underline"
+                style={{ fontFamily: "Newsreader, serif" }}
+              >
+                {SITE.email}
+              </a>
             </nav>
           </div>
         </div>
