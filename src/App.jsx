@@ -153,8 +153,8 @@ const COLORS = {
   forestLight: "#2D5A44",
   cream: "#FAF6EF",
   creamDark: "#F0E9DC",
-  terracotta: "#B85C3D",
-  terracottaDark: "#8F3D22",
+  terracotta: "#A04A2D",
+  terracottaDark: "#7A3319",
   ink: "#262220",
   stone: "#6B6560",
   line: "#D9D2C0",
@@ -162,6 +162,41 @@ const COLORS = {
 
 function useGoogleFonts() {
   useEffect(() => {
+    // Set document language for screen readers
+    if (document.documentElement.lang !== "en") {
+      document.documentElement.lang = "en";
+    }
+
+    // Inject accessibility CSS (focus indicators, reduced motion)
+    const a11yStyle = document.createElement("style");
+    a11yStyle.setAttribute("data-a11y", "true");
+    a11yStyle.innerHTML = `
+      /* Visible focus indicator for keyboard users */
+      a:focus-visible,
+      button:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid #14291F;
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+      /* Dark-background focus uses a light ring */
+      .on-dark :focus-visible {
+        outline-color: #FAF6EF;
+      }
+      /* Honor user preference to reduce motion */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      /* Ensure main region doesn't get a visible outline when targeted via skip link */
+      main:focus { outline: none; }
+    `;
+    document.head.appendChild(a11yStyle);
+
     const preconnect1 = document.createElement("link");
     preconnect1.rel = "preconnect";
     preconnect1.href = "https://fonts.googleapis.com";
@@ -183,6 +218,9 @@ function useGoogleFonts() {
       document.head.removeChild(preconnect1);
       document.head.removeChild(preconnect2);
       document.head.removeChild(link);
+      if (a11yStyle.parentNode) {
+        document.head.removeChild(a11yStyle);
+      }
     };
   }, []);
 }
@@ -259,11 +297,15 @@ function Header({ page, setPage, setMobileOpen }) {
             </div>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav
+            className="hidden lg:flex items-center gap-7"
+            aria-label="Primary"
+          >
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setPage(item.id)}
+                aria-current={page === item.id ? "page" : undefined}
                 className="text-[13px] tracking-wide transition-colors"
                 style={{
                   fontFamily: "Newsreader, serif",
@@ -282,12 +324,12 @@ function Header({ page, setPage, setMobileOpen }) {
           </nav>
 
           <button
-            className="lg:hidden p-2"
+            className="lg:hidden p-3 -mr-2"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             style={{ color: COLORS.forestDark }}
           >
-            <Menu size={22} />
+            <Menu size={22} aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -309,6 +351,9 @@ function MobileMenu({ open, setOpen, page, setPage }) {
   return (
     <div
       className="fixed inset-0 z-50 lg:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
       style={{ backgroundColor: COLORS.cream }}
     >
       <div className="flex items-center justify-between px-5 py-5 border-b" style={{ borderColor: COLORS.line }}>
@@ -318,11 +363,19 @@ function MobileMenu({ open, setOpen, page, setPage }) {
         >
           EST. {SITE.established}
         </div>
-        <button onClick={() => setOpen(false)} aria-label="Close menu" style={{ color: COLORS.forestDark }}>
-          <X size={22} />
+        <button
+          onClick={() => setOpen(false)}
+          aria-label="Close menu"
+          className="p-3 -mr-2"
+          style={{ color: COLORS.forestDark }}
+        >
+          <X size={22} aria-hidden="true" />
         </button>
       </div>
-      <nav className="px-5 py-8 flex flex-col gap-5">
+      <nav
+        className="px-5 py-8 flex flex-col gap-5"
+        aria-label="Primary"
+      >
         {navItems.map((item) => (
           <button
             key={item.id}
@@ -330,6 +383,7 @@ function MobileMenu({ open, setOpen, page, setPage }) {
               setPage(item.id);
               setOpen(false);
             }}
+            aria-current={page === item.id ? "page" : undefined}
             className="text-left text-2xl"
             style={{
               fontFamily: "Fraunces, serif",
@@ -349,8 +403,8 @@ function MobileMenu({ open, setOpen, page, setPage }) {
 function Footer({ setPage }) {
   return (
     <footer
+      className="mt-20 on-dark"
       style={{ backgroundColor: COLORS.forestDark, color: COLORS.cream }}
-      className="mt-20"
     >
       <div className="max-w-6xl mx-auto px-5 md:px-8 py-16">
         <div className="grid md:grid-cols-12 gap-10">
@@ -379,7 +433,7 @@ function Footer({ setPage }) {
             </p>
           </div>
 
-          <div className="md:col-span-3">
+          <nav className="md:col-span-3" aria-label="Site">
             <div
               className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
               style={{ fontFamily: "Newsreader, serif" }}
@@ -406,106 +460,136 @@ function Footer({ setPage }) {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           <div className="md:col-span-4">
-            <div
-              className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
-              style={{ fontFamily: "Newsreader, serif" }}
-            >
-              NEIGHBORHOOD RESOURCES
-            </div>
-            <ul className="space-y-2 text-sm mb-8" style={{ fontFamily: "Newsreader, serif" }}>
-              <li>
-                <a
-                  href="https://www.arlingtonva.us/Government/Topics/Report-Problem"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  Report a Problem <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.civfed.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  Arlington Civic Federation <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.columbia-pike.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  Columbia Pike Partnership <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${SITE.email}`}
-                  className="opacity-80 hover:opacity-100 transition-opacity"
-                >
-                  {SITE.email}
-                </a>
-              </li>
-            </ul>
+            <nav aria-label="Neighborhood resources">
+              <div
+                className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
+                style={{ fontFamily: "Newsreader, serif" }}
+              >
+                NEIGHBORHOOD RESOURCES
+              </div>
+              <ul className="space-y-2 text-sm mb-8" style={{ fontFamily: "Newsreader, serif" }}>
+                <li>
+                  <a
+                    href="https://www.arlingtonva.us/Government/Topics/Report-Problem"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Report a Problem, Arlington County (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    Report a Problem
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.civfed.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Arlington Civic Federation (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    Arlington Civic Federation
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.columbia-pike.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Columbia Pike Partnership (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    Columbia Pike Partnership
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${SITE.email}`}
+                    aria-label={`Email CFCA at ${SITE.email}`}
+                    className="opacity-80 hover:opacity-100 transition-opacity"
+                  >
+                    {SITE.email}
+                  </a>
+                </li>
+              </ul>
+            </nav>
 
-            <div
-              className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
-              style={{ fontFamily: "Newsreader, serif" }}
-            >
-              CONNECT
-            </div>
-            <ul className="space-y-2 text-sm" style={{ fontFamily: "Newsreader, serif" }}>
-              <li>
-                <a
-                  href={SITE.social.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  Facebook <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SITE.social.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  X (@CFCA_Arlington) <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SITE.social.nextdoor}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
-                >
-                  Nextdoor <ExternalLink size={11} />
-                </a>
-              </li>
-            </ul>
+            <nav aria-label="Connect on social media">
+              <div
+                className="text-[10px] tracking-[0.3em] mb-4 opacity-60"
+                style={{ fontFamily: "Newsreader, serif" }}
+              >
+                CONNECT
+              </div>
+              <ul className="space-y-2 text-sm" style={{ fontFamily: "Newsreader, serif" }}>
+                <li>
+                  <a
+                    href={SITE.social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Columbia Forest on Facebook (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    Facebook
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={SITE.social.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Columbia Forest on X, formerly Twitter (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    X (@CFCA_Arlington)
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={SITE.social.nextdoor}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Columbia Forest on Nextdoor (opens in a new tab)"
+                    className="opacity-80 hover:opacity-100 transition-opacity inline-flex items-center gap-1"
+                  >
+                    Nextdoor
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
 
         <div
-          className="mt-16 pt-6 border-t text-xs opacity-50 flex flex-col md:flex-row justify-between gap-2"
+          className="mt-16 pt-6 border-t text-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-3"
           style={{
             borderColor: "rgba(250,246,239,0.15)",
             fontFamily: "Newsreader, serif",
           }}
         >
-          <div>© {new Date().getFullYear()} Columbia Forest Civic Association</div>
-          <div>A volunteer-run, non-partisan neighborhood association</div>
+          <div className="opacity-50">
+            © {new Date().getFullYear()} Columbia Forest Civic Association
+          </div>
+          <div className="opacity-50">
+            A volunteer-run, non-partisan neighborhood association
+          </div>
+          <div>
+            <a
+              href={`mailto:${SITE.email}?subject=Accessibility%20feedback`}
+              className="opacity-70 hover:opacity-100 transition-opacity underline"
+              aria-label="Send accessibility feedback by email"
+            >
+              Accessibility feedback
+            </a>
+          </div>
         </div>
       </div>
     </footer>
@@ -580,69 +664,63 @@ function Hero({ setPage }) {
       className="relative overflow-hidden border-b"
       style={{ backgroundColor: COLORS.cream, borderColor: COLORS.line }}
     >
-      <div className="max-w-6xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-20 md:pb-32">
-        <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-end">
-          <div className="md:col-span-8">
-            <div
-              className="text-[10px] tracking-[0.4em] mb-6"
-              style={{ color: COLORS.terracotta, fontFamily: "Newsreader, serif" }}
-            >
-              EST. {SITE.established} · ARLINGTON, VIRGINIA
-            </div>
-            <h1
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] mb-8"
-              style={{
-                fontFamily: "Fraunces, serif",
-                fontWeight: 400,
-                color: COLORS.forestDark,
-                letterSpacing: "-0.025em",
-              }}
-            >
-              A neighborhood
-              <br />
-              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
-                worth looking
-              </span>{" "}
-              after.
-            </h1>
-            <p
-              className="text-lg md:text-xl leading-relaxed max-w-xl mb-8"
-              style={{
-                color: COLORS.ink,
-                fontFamily: "Newsreader, serif",
-                fontWeight: 300,
-              }}
-            >
-              {SITE.mission}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setPage("about")}
-                className="inline-flex items-center gap-2 px-6 py-3 text-sm tracking-wide transition-all hover:gap-3"
-                style={{
-                  backgroundColor: COLORS.forest,
-                  color: COLORS.cream,
-                  fontFamily: "Newsreader, serif",
-                }}
-              >
-                About the neighborhood <ArrowRight size={15} />
-              </button>
-              <button
-                onClick={() => setPage("events")}
-                className="inline-flex items-center gap-2 px-6 py-3 text-sm tracking-wide transition-colors"
-                style={{
-                  border: `1px solid ${COLORS.forest}`,
-                  color: COLORS.forest,
-                  fontFamily: "Newsreader, serif",
-                }}
-              >
-                Upcoming events
-              </button>
-            </div>
+      <div className="max-w-6xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-20 md:pb-24">
+        <div className="max-w-4xl">
+          <div
+            className="text-[10px] tracking-[0.4em] mb-6"
+            style={{ color: COLORS.terracotta, fontFamily: "Newsreader, serif" }}
+          >
+            EST. {SITE.established} · ARLINGTON, VIRGINIA
           </div>
-
-          <div className="md:col-span-4 hidden md:block">
-            <BoundaryMap compact />
+          <h1
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] mb-8"
+            style={{
+              fontFamily: "Fraunces, serif",
+              fontWeight: 400,
+              color: COLORS.forestDark,
+              letterSpacing: "-0.025em",
+            }}
+          >
+            A neighborhood
+            <br />
+            <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+              worth looking
+            </span>{" "}
+            after.
+          </h1>
+          <p
+            className="text-lg md:text-xl leading-relaxed max-w-2xl mb-8"
+            style={{
+              color: COLORS.ink,
+              fontFamily: "Newsreader, serif",
+              fontWeight: 300,
+            }}
+          >
+            {SITE.mission}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setPage("about")}
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm tracking-wide transition-all hover:gap-3"
+              style={{
+                backgroundColor: COLORS.forest,
+                color: COLORS.cream,
+                fontFamily: "Newsreader, serif",
+              }}
+            >
+              About the neighborhood <ArrowRight size={15} aria-hidden="true" />
+            </button>
+            <button
+              onClick={() => setPage("events")}
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm tracking-wide transition-colors"
+              style={{
+                border: `1px solid ${COLORS.forest}`,
+                color: COLORS.forest,
+                fontFamily: "Newsreader, serif",
+              }}
+            >
+              Upcoming events
+            </button>
           </div>
         </div>
       </div>
@@ -680,7 +758,6 @@ function BoundaryMap({ compact = false }) {
         className="w-full h-auto block"
         style={{
           border: `1px solid ${COLORS.line}`,
-          maxWidth: compact ? "420px" : "600px",
         }}
       />
       <div
@@ -723,7 +800,7 @@ function UpcomingEventsTeaser({ setPage }) {
               className="inline-flex items-center gap-2 text-sm hover:gap-3 transition-all mt-4"
               style={{ color: COLORS.forest, fontFamily: "Newsreader, serif" }}
             >
-              All events <ArrowRight size={14} />
+              All events <ArrowRight size={14} aria-hidden="true" />
             </button>
           </div>
           <div className="md:col-span-8 space-y-8">
@@ -780,10 +857,10 @@ function UpcomingEventsTeaser({ setPage }) {
                       style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
                     >
                       <span className="inline-flex items-center gap-1">
-                        <Clock size={12} /> {e.time}
+                        <Clock size={12} aria-hidden="true" /> {e.time}
                       </span>
                       <span className="inline-flex items-center gap-1">
-                        <MapPin size={12} /> {e.location}
+                        <MapPin size={12} aria-hidden="true" /> {e.location}
                       </span>
                     </div>
                     <p
@@ -820,7 +897,7 @@ function LatestNewsTeaser({ setPage }) {
             className="inline-flex items-center gap-2 text-sm hover:gap-3 transition-all"
             style={{ color: COLORS.forest, fontFamily: "Newsreader, serif" }}
           >
-            All news <ArrowRight size={14} />
+            All news <ArrowRight size={14} aria-hidden="true" />
           </button>
         </div>
         <div className="grid md:grid-cols-3 gap-10">
@@ -858,7 +935,10 @@ function LatestNewsTeaser({ setPage }) {
 
 function MembershipCTA({ setPage }) {
   return (
-    <section style={{ backgroundColor: COLORS.forest, color: COLORS.cream }}>
+    <section
+      className="on-dark"
+      style={{ backgroundColor: COLORS.forest, color: COLORS.cream }}
+    >
       <div className="max-w-5xl mx-auto px-5 md:px-8 py-24 text-center">
         <div
           className="text-[10px] tracking-[0.3em] mb-6 opacity-70"
@@ -896,7 +976,7 @@ function MembershipCTA({ setPage }) {
               fontFamily: "Newsreader, serif",
             }}
           >
-            Get in touch <ArrowRight size={15} />
+            Get in touch <ArrowRight size={15} aria-hidden="true" />
           </button>
           <button
             onClick={() => setPage("events")}
@@ -915,10 +995,108 @@ function MembershipCTA({ setPage }) {
   );
 }
 
+function NeighborhoodMapSection({ setPage }) {
+  return (
+    <section
+      className="border-b"
+      style={{ backgroundColor: COLORS.creamDark, borderColor: COLORS.line }}
+    >
+      <div className="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+        <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+          <div className="md:col-span-4">
+            <div
+              className="text-[10px] tracking-[0.3em] mb-4"
+              style={{ color: COLORS.terracotta, fontFamily: "Newsreader, serif" }}
+            >
+              ARE YOU IN THE NEIGHBORHOOD?
+            </div>
+            <h2
+              className="text-3xl md:text-4xl leading-tight mb-5"
+              style={{
+                fontFamily: "Fraunces, serif",
+                fontWeight: 400,
+                color: COLORS.forestDark,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              A small pocket of Arlington,{" "}
+              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                west of the Pike.
+              </span>
+            </h2>
+            <p
+              className="leading-relaxed mb-4"
+              style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
+            >
+              Columbia Forest is bounded by{" "}
+              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                Columbia Pike
+              </span>{" "}
+              to the north,{" "}
+              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                Four Mile Run
+              </span>{" "}
+              to the east,{" "}
+              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                South George Mason Drive
+              </span>{" "}
+              to the south, and{" "}
+              <span style={{ fontStyle: "italic", color: COLORS.forest }}>
+                the Arlington County line
+              </span>{" "}
+              to the west.
+            </p>
+            <p
+              className="leading-relaxed text-sm"
+              style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
+            >
+              Not sure if your home falls inside? The highlighted area on the map
+              shows Columbia Forest in relation to Arlington Mill, Forest Glen, and
+              Claremont.
+            </p>
+            <button
+              onClick={() => setPage("about")}
+              className="inline-flex items-center gap-2 text-sm hover:gap-3 transition-all mt-5"
+              style={{ color: COLORS.forest, fontFamily: "Newsreader, serif" }}
+            >
+              More about the neighborhood <ArrowRight size={14} aria-hidden="true" />
+            </button>
+          </div>
+          <div className="md:col-span-8">
+            <img
+              src="/columbia-forest-map.png"
+              alt="Map of Columbia Forest and surrounding Arlington neighborhoods, with Columbia Forest shaded at center"
+              className="w-full h-auto block"
+              style={{ border: `1px solid ${COLORS.line}` }}
+            />
+            <div
+              className="text-xs mt-3 italic"
+              style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
+            >
+              Map:{" "}
+              <a
+                href="https://experience.arcgis.com/experience/a9990f1fe2924fefac18b6f323ee7c87/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:no-underline"
+                style={{ color: COLORS.forest }}
+              >
+                Arlington County GIS
+              </a>
+              .
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomePage({ setPage }) {
   return (
     <>
       <Hero setPage={setPage} />
+      <NeighborhoodMapSection setPage={setPage} />
       <UpcomingEventsTeaser setPage={setPage} />
       <LatestNewsTeaser setPage={setPage} />
       <MembershipCTA setPage={setPage} />
@@ -1139,10 +1317,11 @@ function AboutPage() {
                 {o.email && (
                   <a
                     href={`mailto:${o.email}`}
+                    aria-label={`Email ${o.name}, ${o.role}, at ${o.email}`}
                     className="text-sm inline-flex items-center gap-1 mt-1 transition-opacity hover:opacity-70"
                     style={{ color: COLORS.forest, fontFamily: "Newsreader, serif" }}
                   >
-                    <Mail size={12} /> {o.email}
+                    <Mail size={12} aria-hidden="true" /> {o.email}
                   </a>
                 )}
               </div>
@@ -1240,7 +1419,7 @@ function EventsPage() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3
+                  <h2
                     className="text-2xl mb-2"
                     style={{
                       fontFamily: "Fraunces, serif",
@@ -1249,19 +1428,19 @@ function EventsPage() {
                     }}
                   >
                     {e.title}
-                  </h3>
+                  </h2>
                   <div
                     className="text-sm mb-3 flex flex-wrap gap-x-5 gap-y-1"
                     style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
                   >
                     <span className="inline-flex items-center gap-1">
-                      <Calendar size={12} /> {formatDate(e.date)}
+                      <Calendar size={12} aria-hidden="true" /> {formatDate(e.date)}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <Clock size={12} /> {e.time}
+                      <Clock size={12} aria-hidden="true" /> {e.time}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <MapPin size={12} /> {e.location}
+                      <MapPin size={12} aria-hidden="true" /> {e.location}
                     </span>
                   </div>
                   <p
@@ -1352,7 +1531,7 @@ function ProjectsPage() {
             >
               <div className="grid md:grid-cols-12 gap-6">
                 <div className="md:col-span-4">
-                  <h3
+                  <h2
                     className="text-2xl md:text-3xl leading-tight"
                     style={{
                       fontFamily: "Fraunces, serif",
@@ -1362,7 +1541,7 @@ function ProjectsPage() {
                     }}
                   >
                     {p.title}
-                  </h3>
+                  </h2>
                 </div>
                 <div className="md:col-span-8">
                   <p
@@ -1399,39 +1578,63 @@ function DocumentsPage() {
       />
       <div className="max-w-4xl mx-auto px-5 md:px-8 pb-12">
         <div className="border-t" style={{ borderColor: COLORS.line }}>
-          {DOCUMENTS.map((doc, i) => (
-            <a
-              key={i}
-              href={doc.url}
-              target={doc.url === "#" ? undefined : "_blank"}
-              rel={doc.url === "#" ? undefined : "noopener noreferrer"}
-              className="flex items-center justify-between py-6 border-b hover:opacity-70 transition-opacity"
-              style={{ borderColor: COLORS.line }}
-            >
-              <div className="flex items-center gap-4">
-                <FileText size={18} style={{ color: COLORS.terracotta }} />
-                <div>
-                  <div
-                    className="text-lg"
-                    style={{
-                      fontFamily: "Fraunces, serif",
-                      fontWeight: 500,
-                      color: COLORS.forestDark,
-                    }}
-                  >
-                    {doc.title}
-                  </div>
-                  <div
-                    className="text-xs mt-0.5"
-                    style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
-                  >
-                    {doc.type} · Updated {doc.updated}
+          {DOCUMENTS.map((doc, i) => {
+            const isPlaceholder = doc.url === "#";
+            const ariaLabel = isPlaceholder
+              ? `${doc.title} — coming soon`
+              : `${doc.title}, ${doc.type}, opens in a new tab`;
+            return (
+              <a
+                key={i}
+                href={isPlaceholder ? undefined : doc.url}
+                target={isPlaceholder ? undefined : "_blank"}
+                rel={isPlaceholder ? undefined : "noopener noreferrer"}
+                aria-label={ariaLabel}
+                aria-disabled={isPlaceholder ? "true" : undefined}
+                className="flex items-center justify-between py-6 border-b hover:opacity-70 transition-opacity"
+                style={{
+                  borderColor: COLORS.line,
+                  opacity: isPlaceholder ? 0.55 : 1,
+                  cursor: isPlaceholder ? "not-allowed" : "pointer",
+                }}
+                onClick={(e) => {
+                  if (isPlaceholder) e.preventDefault();
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <FileText
+                    size={18}
+                    aria-hidden="true"
+                    style={{ color: COLORS.terracotta }}
+                  />
+                  <div>
+                    <div
+                      className="text-lg"
+                      style={{
+                        fontFamily: "Fraunces, serif",
+                        fontWeight: 500,
+                        color: COLORS.forestDark,
+                      }}
+                    >
+                      {doc.title}
+                    </div>
+                    <div
+                      className="text-xs mt-0.5"
+                      style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
+                    >
+                      {doc.type} ·{" "}
+                      {isPlaceholder ? "Coming soon" : `Updated ${doc.updated}`}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ArrowUpRight size={18} style={{ color: COLORS.forest }} />
-            </a>
-          ))}
+                <ArrowUpRight
+                  size={18}
+                  aria-hidden="true"
+                  style={{ color: COLORS.forest }}
+                />
+              </a>
+            );
+          })}
         </div>
       </div>
     </>
@@ -1462,6 +1665,7 @@ function ContactPage() {
             </div>
             <a
               href={`mailto:${SITE.email}`}
+              aria-label={`Email CFCA at ${SITE.email}`}
               className="text-2xl md:text-3xl break-all hover:opacity-70 transition-opacity"
               style={{
                 fontFamily: "Fraunces, serif",
@@ -1499,6 +1703,7 @@ function ContactPage() {
               href="https://www.arlingtonva.us/Government/Topics/Report-Problem"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Report a Problem to Arlington County (opens in a new tab)"
               className="inline-flex items-center gap-2 px-5 py-2.5 text-sm tracking-wide transition-all hover:gap-3"
               style={{
                 backgroundColor: COLORS.forest,
@@ -1507,7 +1712,7 @@ function ContactPage() {
               }}
             >
               Arlington County: Report a Problem{" "}
-              <ExternalLink size={14} />
+              <ExternalLink size={14} aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -1562,6 +1767,19 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2"
+        style={{
+          backgroundColor: COLORS.forestDark,
+          color: COLORS.cream,
+          fontFamily: "Newsreader, serif",
+          outline: `2px solid ${COLORS.cream}`,
+          outlineOffset: "2px",
+        }}
+      >
+        Skip to main content
+      </a>
       <Header page={page} setPage={setPage} setMobileOpen={setMobileOpen} />
       <MobileMenu
         open={mobileOpen}
@@ -1569,7 +1787,9 @@ export default function App() {
         page={page}
         setPage={setPage}
       />
-      <main>{content}</main>
+      <main id="main-content" tabIndex={-1}>
+        {content}
+      </main>
       <Footer setPage={setPage} />
     </div>
   );
