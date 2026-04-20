@@ -64,32 +64,7 @@ const OFFICERS = [
   { role: "Secretary", name: "Theresa Flynn", email: "" },
 ];
 
-const EVENTS = [
-  {
-    title: "CFCA Monthly Meeting",
-    date: "2026-05-14",
-    time: "7:30 PM",
-    location: "Barcroft Community House (tentative)",
-    description:
-      "Monthly general membership meeting. All residents are welcome to attend, listen, and be heard.",
-  },
-  {
-    title: "Neighborhood Cleanup",
-    date: "2026-06-07",
-    time: "9:00 AM",
-    location: "Bailey's Branch Park",
-    description:
-      "Join neighbors for a morning of picking up litter along Four Mile Run and in the park. Gloves and bags provided.",
-  },
-  {
-    title: "West Pike Food Truck Party",
-    date: "2026-10-03",
-    time: "5:00 PM",
-    location: "Bailey's Branch Park",
-    description:
-      "Our signature annual event — a West Pike tradition joining Columbia Forest, Barcroft, and Arlington Mill.",
-  },
-];
+const EVENTS = [];
 
 const NEWS = [
   {
@@ -102,7 +77,7 @@ const NEWS = [
     title: "Looking ahead: 2026 priorities",
     date: "2026-03-20",
     excerpt:
-      "The board has adopted a short slate of focus areas for the year: pedestrian safety along Columbia Pike, stewardship of Bailey's Branch Park, and strengthening the West Pike neighborhood partnership.",
+      "This year's focus is the start of construction at the updated Bailey's Branch Park and improved pedestrian safety throughout the neighborhood with a focus on Complete Street projects along S. Columbus St.",
   },
   {
     title: "From the archive: 85 years of Columbia Forest",
@@ -830,7 +805,7 @@ function UpcomingEventsTeaser({ setPage }) {
                 className="italic"
                 style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
               >
-                No events currently scheduled. Check back soon.
+                No events currently scheduled. Upcoming meetings to be announced soon.
               </p>
             )}
             {next.map((e, i) => {
@@ -1040,9 +1015,9 @@ function NeighborhoodMapSection({ setPage }) {
                 letterSpacing: "-0.01em",
               }}
             >
-              A small pocket of Arlington,{" "}
+              A diverse neighborhood in Arlington,{" "}
               <span style={{ fontStyle: "italic", color: COLORS.forest }}>
-                west of the Pike.
+                on the west end of the Pike.
               </span>
             </h2>
             <p
@@ -1635,6 +1610,14 @@ function EventsPage() {
       />
       <div className="max-w-4xl mx-auto px-5 md:px-8 pb-12">
         <div className="border-t" style={{ borderColor: COLORS.line }}>
+          {sorted.length === 0 && (
+            <p
+              className="py-16 text-lg italic text-center"
+              style={{ color: COLORS.stone, fontFamily: "Newsreader, serif" }}
+            >
+              Upcoming meetings to be announced soon.
+            </p>
+          )}
           {sorted.map((e, i) => {
             const d = shortDate(e.date);
             return (
