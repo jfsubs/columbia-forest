@@ -962,9 +962,9 @@ function MembershipCTA({ setPage }) {
           className="text-lg max-w-xl mx-auto mb-10 opacity-85 leading-relaxed"
           style={{ fontFamily: "Newsreader, serif", fontWeight: 300 }}
         >
-          CFCA meets monthly to discuss the issues that shape our neighborhood — from
-          parks and pedestrian safety to the Pike, the park, and the schools our
-          children walk to.
+          CFCA meets roughly every quarter to discuss the issues that shape our
+          neighborhood — from parks and pedestrian safety to the Pike, the park,
+          and the schools our children walk to.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <button
@@ -1188,11 +1188,12 @@ function AboutPage({ setPage }) {
               property owners, and businesses of our neighborhood since {SITE.established}.
             </p>
             <p className="text-lg leading-relaxed mb-5">
-              We're a non-profit, non-partisan volunteer organization. We meet monthly
-              to hear from neighbors, host speakers from County government and
-              community groups, and formulate positions on the matters that affect
-              daily life in Columbia Forest — schools, streets, parks, zoning, and
-              the long, slow evolution of Columbia Pike.
+              We're a non-profit, non-partisan volunteer organization. We meet
+              roughly every quarter to hear from neighbors, host speakers from
+              County government and community groups, and formulate positions on
+              the matters that affect daily life in Columbia Forest — schools,
+              streets, parks, zoning, and the long, slow evolution of Columbia
+              Pike.
             </p>
             <p className="text-lg leading-relaxed">
               CFCA is a member of the Arlington County Civic Federation and
@@ -1610,7 +1611,7 @@ function EventsPage() {
       <PageHeader
         eyebrow="EVENTS"
         title="Upcoming gatherings."
-        intro="Monthly meetings, neighborhood workdays, and the occasional food truck."
+        intro="Quarterly meetings, neighborhood workdays, and the occasional food truck."
       />
       <div className="max-w-4xl mx-auto px-5 md:px-8 pb-12">
         <div className="border-t" style={{ borderColor: COLORS.line }}>
