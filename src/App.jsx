@@ -1463,7 +1463,7 @@ function AboutPage({ setPage }) {
               {[
                 "Maintain a balanced mix of housing options and foster opportunities for home ownership.",
                 "Ensure pedestrian safety through better sidewalks, street design, and lighting.",
-                "Support variety and safety in transportation — calmer streets, more parking, convenient transit, and safer bicycling.",
+                "Support variety and safety in transportation — calmer streets, convenient transit, and safer bicycling.",
                 "Expand access to parks and establish community stewardship of Four Mile Run and Bailey's Branch.",
                 "Improve livability and appearance through beautification, tree preservation, litter control, and code enforcement.",
                 "Build a strong Columbia Forest identity through neighborhood signs and shared spaces.",
