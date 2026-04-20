@@ -89,22 +89,26 @@ const NEWS = [
 
 const PROJECTS = [
   {
-    title: "Bailey's Branch Park",
+    title: "Bailey's Branch Park Renovation",
     summary:
-      "Our beloved neighborhood park and the heart of Columbia Forest's outdoor life.",
-    body: "The CFCA works with Arlington County Parks & Recreation to monitor the condition of Bailey's Branch Park, advocate for improvements, and host community gatherings on its lawn.",
+      "A full redesign of the neighborhood's two-acre park is underway — construction expected to begin in 2026.",
+    body: "The existing playground is over 25 years old and no longer meets current safety or ADA standards. Arlington County's renovation — jointly funded by the Arlington Neighborhoods Program and Parks Maintenance Capital — includes a new playground, removal of invasive plants, native tree and pollinator planting, updated site furnishings and signage, improved stormwater management, and significantly enhanced accessibility. CFCA has been actively involved in the design process since 2022.",
+    link: {
+      url: "https://www.arlingtonva.us/Government/Projects/Project-Types/Parks-Projects/Baileys-Branch-Park-Renovation",
+      label: "Project page at Arlington County",
+    },
+  },
+  {
+    title: "Pedestrian Safety & Complete Streets",
+    summary:
+      "Making neighborhood streets safer to walk — with a 2026 focus on S. Columbus Street.",
+    body: "Since the 1974 Four Mile Run bridge connected S. George Mason Drive to Fairfax County, cut-through traffic and speeding on interior streets have been a persistent concern. CFCA's 2026 priority is advancing Complete Streets improvements along S. Columbus Street, one of two principal north-south streets crossing the neighborhood. We also track pedestrian safety along Columbia Pike and at intersections with S. George Mason Drive.",
   },
   {
     title: "West Pike Neighborhood Partnership",
     summary:
       "Joint programming with Barcroft and Arlington Mill civic associations.",
-    body: "Columbia Forest is one of three 'West Pike' civic associations that collaborate on community events — most visibly the annual West Pike Food Truck Party, now in its tenth year.",
-  },
-  {
-    title: "Columbia Pike & Pedestrian Safety",
-    summary:
-      "Advocacy on the Pike corridor and surrounding pedestrian infrastructure.",
-    body: "CFCA tracks Columbia Pike implementation, transit planning, and pedestrian safety concerns along the Pike, George Mason Drive, and neighborhood residential streets.",
+    body: "Columbia Forest is one of three \"West Pike\" civic associations that collaborate on community events — most visibly the annual West Pike Food Truck Party, now a decade-old neighborhood tradition.",
   },
 ];
 
@@ -1785,6 +1789,22 @@ function ProjectsPage() {
                   >
                     {p.body}
                   </p>
+                  {p.link && (
+                    <a
+                      href={p.link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${p.link.label} (opens in a new tab)`}
+                      className="inline-flex items-center gap-2 mt-5 text-sm transition-all hover:gap-3"
+                      style={{
+                        color: COLORS.forest,
+                        fontFamily: "Newsreader, serif",
+                      }}
+                    >
+                      {p.link.label}
+                      <ExternalLink size={13} aria-hidden="true" />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
