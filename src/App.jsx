@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Menu,
   X,
@@ -1967,12 +1967,41 @@ function ContactPage() {
 export default function App() {
   const [page, setPage] = useState("home");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isPopping = useRef(false);   // true while a popstate restore is in flight
+  const hasMounted = useRef(false);  // false on first render so we replaceState instead of pushState
 
   useGoogleFonts();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [page]);
+
+  /* ---------- Browser history sync ----------
+     Pushes a history entry on every page change so Back/Forward work.
+     isPopping suppresses the reciprocal pushState when popstate restores state. */
+  useEffect(() => {
+    if (isPopping.current) {
+      isPopping.current = false;
+      return;
+    }
+    if (!hasMounted.current) {
+      window.history.replaceState({ page }, "");
+      hasMounted.current = true;
+    } else {
+      window.history.pushState({ page }, "");
+    }
+  }, [page]);
+
+  useEffect(() => {
+    const handlePop = (e) => {
+      const s = e.state;
+      if (!s) return;
+      isPopping.current = true;
+      setPage(s.page ?? "home");
+    };
+    window.addEventListener("popstate", handlePop);
+    return () => window.removeEventListener("popstate", handlePop);
+  }, []);
 
   let content;
   switch (page) {
