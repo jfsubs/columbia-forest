@@ -1364,13 +1364,13 @@ function AboutPage({ setPage }) {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Five Lustron Houses
+                Two Lustron Houses
               </h3>
               <p
                 className="leading-relaxed"
                 style={{ color: COLORS.ink, fontFamily: "Newsreader, serif" }}
               >
-                Columbia Forest is home to five Lustron houses — prefabricated
+                Columbia Forest is home to two Lustron houses — prefabricated
                 porcelain-enameled steel homes shipped flat and bolted together on
                 site as a post-war housing experiment. Fewer than 3,000 were ever
                 built nationwide; Lustrons in other parts of the country are listed
